@@ -1,0 +1,80 @@
+// Define the PostgreSQL database connection
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+enum RoleName {
+  User
+  Admin
+  SuperAdmin
+}
+
+enum Status {
+  Enabled
+  Disabled
+}
+
+// User Model
+model User {
+  id             String        @id @default(uuid()) @db.Uuid
+  fullName       String
+  password       String
+  username       String        @unique
+  phoneNumber    String        @unique
+  email          String        @unique
+  country        String?       @db.VarChar(100)
+  province       String?       @db.VarChar(100)
+  district       String?       @db.VarChar(100)
+  sector         String?       @db.VarChar(100)
+  birthDate      DateTime?     @db.Date
+  whatsappNumber String?       @db.VarChar(256)
+  profilePicture String        @default("https://www.svgrepo.com/show/384674/account-avatar-profile-user-11.svg")
+  googleId       String?       @db.Text
+  facebookId     String?       @db.Text
+  roleId         String        @db.Uuid
+  verified       Boolean       @default(false)
+  status         Status        @default(Enabled)
+  createdAt      DateTime      @default(now())
+  updatedAt      DateTime      @updatedAt
+  UserRoles      UserAndRole[]
+}
+
+// Role Model
+model Role {
+  id          String        @id @default(uuid()) @db.Uuid
+  name        RoleName      @unique
+  description String
+  status      Status        @default(Enabled)
+  createdAt   DateTime      @default(now())
+  updatedAt   DateTime      @updatedAt
+  UserRoles   UserAndRole[]
+}
+
+// UserAndRole Model (Join Table for Users and Roles)
+model UserAndRole {
+  id        String   @id @default(uuid()) @db.Uuid
+  userId    String   @db.Uuid
+  roleId    String   @db.Uuid
+  status    Status   @default(Enabled)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+  role Role @relation(fields: [roleId], references: [id], onDelete: Cascade)
+}
+
+// Otp model
+model UserVerificationCodes {
+  id        String   @id @default(uuid())
+  email     String
+  otp       String
+  createdAt DateTime @default(now()) @map("created_at")
+  expiresAt DateTime @default(now()) @updatedAt @map("expires_at")
+
+  @@index([expiresAt])
+}
