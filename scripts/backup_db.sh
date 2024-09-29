@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # Variables
-DB_NAME="trackitback"        # Replace with your database name
+DB_NAME="rhrsdb"        # Replace with your database name
 DB_USER="postgres"             # Replace with your database username
 DB_HOST="localhost"                  # Replace with your database host, if not local
 DB_PORT="5432"                       # Replace with your database port, default is 5432

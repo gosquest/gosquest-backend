@@ -1,10 +1,9 @@
 import { Request, Response } from "express";
-import bcrypt from "bcryptjs";
 import { AppError, handleCatchError } from "../middlewares";
 import { ValidateSignUpDto, validateLoginDto, validateUpdateDto } from "../utils";
 import { generateToken } from "../utils/generate.token";
 import { db } from "../db/prisma";
-import { usernameRegex } from "../constants";
+import otpGenerator from "otp-generator"
 
 // create user
 export const createUser = async (req: Request, res: Response): Promise<any> => {
@@ -14,18 +13,20 @@ export const createUser = async (req: Request, res: Response): Promise<any> => {
     if (error)
       throw new AppError(error.details[0].message, 400);
 
-    const { username, email, password, fullName, phoneNumber } = req.body;
+    const { fullName } = req.body;
     const userExists = await db.user.findUnique({
-      where: { email },
+      where: { fullName },
     });
 
     if (userExists)
-      throw new AppError("user with that email already exists", 401);
+      throw new AppError("user with that fullName already exists", 401);
 
-    if (!usernameRegex.test(username))
-      throw new AppError('Invalid username. It must be alphanumeric, may contain hyphens, but cannot start or end with one, and has a max length of 39 characters.', 400);
-
-    const hashedPassword = await bcrypt.hash(password, 10);
+    // Generate a unique OTP
+    let code = otpGenerator.generate(4, {
+      upperCaseAlphabets: false,
+      lowerCaseAlphabets: false,
+      specialChars: false,
+    });
 
     const role = await db.role.findUnique({
       where: { name: 'User' }
@@ -34,52 +35,12 @@ export const createUser = async (req: Request, res: Response): Promise<any> => {
     const savedUser = await db.user.create({
       data: {
         fullName,
-        username,
-        email,
-        phoneNumber,
-        password: hashedPassword,
+        code,
         roleId: role?.id as string
       },
     });
-    const { password: _, ...userWithoutPassword } = savedUser;
-    return res.status(201).json({ success: true, message: "Account created successfully", user: userWithoutPassword });
-  } catch (error: AppError | any) {
-    return handleCatchError(error, res);
-  }
-};
-
-// verify account
-export const verifyAccount = async (req: Request, res: Response): Promise<any> => {
-  try {
-    const { email, otp } = req.body;
-
-    // Find the latest otp document for the given email
-    const document = await db.userVerificationCodes.findFirst({
-      where: { email },
-      orderBy: { createdAt: 'desc' },
-    });
-
-    // Find the user by email
-    const user = await db.user.findUnique({
-      where: { email },
-    });
-
-    if (!document)
-      throw new AppError("Invalid otp: Email not found", 404)
-
-    if (document.otp !== otp)
-      throw new AppError("Invalid otp", 400)
-
-    if (!user)
-      throw new AppError("User not found", 404)
-
-    // Set the user as verified
-    await db.user.update({
-      where: { email },
-      data: { verified: true },
-    });
-
-    return res.status(200).json({ success: true, message: 'Account verified successfully' });
+    const { code: _, ...userWithoutcode } = savedUser;
+    return res.status(201).json({ success: true, message: "Account created successfully", user: userWithoutcode });
   } catch (error: AppError | any) {
     return handleCatchError(error, res);
   }
@@ -94,32 +55,22 @@ export const loginUser = async (req: Request, res: Response): Promise<any> => {
       throw new AppError(error.details[0].message, 400);
     }
 
-    const { email, password } = req.body;
+    const { fullName, code } = req.body;
 
-    const user = await db.user.findUnique({
-      where: { email },
+    const user = await db.user.findFirst({
+      where: { fullName, code },
     });
 
     if (!user) {
-      throw new AppError("invalid credentials", 401);
+      throw new AppError("User not found", 404);
     }
 
-    if (!user.verified) {
-      throw new AppError("please verify your account before login", 401);
-    }
+    const role = await db.role.findUnique({
+      where: { id: user.roleId }
+    })
 
-    if (!user.password) {
-      throw new AppError("the provided email does not use email auth.", 402);
-    }
-
-    const passwordMatch = await bcrypt.compare(password, user.password);
-
-    if (!passwordMatch) {
-      throw new AppError("invalid credentials", 401);
-    }
-
-    const token = await generateToken(user.id.toString(), user.email);
-    const { password: _, ...rest } = user
+    const token = await generateToken(user.fullName, role?.name as string);
+    const { code: _, ...rest } = user
 
     return res.status(200).json({ rest, token });
   } catch (error: AppError | any) {
@@ -127,23 +78,69 @@ export const loginUser = async (req: Request, res: Response): Promise<any> => {
   }
 };
 
-// update profile details
-export const updateProfile = async (req: Request, res: Response): Promise<any> => {
+
+export const getAllUsers = async (req: Request, res:Response): Promise<any> => {
   try {
-    const { userId } = req.params
-    const { error } = validateUpdateDto(req.body);
+    console.log(req.body);
 
-    if (error) {
-      return res.status(400).json({ error: error.details[0].message });
-    }
+    const userRole = await db.role.findUnique({
+      where: { name: 'User' }
+    })
 
-    const updatedUser = await db.user.update({
-      where: { id: userId },
-      data: req.body,
-    });
+    if(!userRole)
+      throw new AppError("User role not found", 404)
 
-    return res.status(200).json({ user: updatedUser });
+    const users = await db.user.findMany({
+      where: { roleId: userRole?.id, status: 'Enabled' }
+    })
+    
+    const usersWithoutCode = users.map((user) => {
+      const { code: _, ...rest } = user
+      return rest
+    })
+
+    return res.status(200).json({ success: true, message: "Users retrieved", users: usersWithoutCode })
+
   } catch (error: AppError | any) {
     return handleCatchError(error, res);
   }
-};
+}
+
+export const updateUser = async ( req: Request, res: Response ): Promise<any> => {
+  try {
+    const { error } = validateUpdateDto(req.body)
+    if(error)
+      throw new AppError(error.details[0].message, 400)
+    
+    const { userId } = req.params
+    const { fullName, status } = req.body
+
+    const updatedUser = await db.user.update({
+      where: { id: userId },
+      data: {
+        fullName,
+        status
+      }
+    })
+
+    const { code: _, ...rest } = updatedUser
+    return res.status(200).json({ success: true, message: "User updated successfully", user: rest })
+    
+  } catch (error: AppError | any) {
+    return handleCatchError(error, res)
+  }
+}
+
+
+export const getAllUsersAdmin = async (req: Request, res:Response): Promise<any> => {
+  try {
+    console.log(req.body);
+
+    const users = await db.user.findMany()
+
+    return res.status(200).json({ success: true, message: "Users retrieved", users })
+
+  } catch (error: AppError | any) {
+    return handleCatchError(error, res);
+  }
+}

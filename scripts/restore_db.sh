@@ -1,11 +1,11 @@
 #!/bin/bash
 
 # Variables
-DB_NAME="trackitback"        # Replace with your database name
+DB_NAME="rhrsdb"        # Replace with your database name
 DB_USER="postgres"             # Replace with your database username
 DB_HOST="localhost"                  # Replace with your database host, if not local
 DB_PORT="5432"                       # Replace with your database port, default is 5432
-BACKUP_FILE="../backups/trackitback_backup.sql" # Replace with the backup file path you want to restore from
+BACKUP_FILE="../backups/rhrsdb_backup.sql" # Replace with the backup file path you want to restore from
 
 # Check if backup file exists
 if [ ! -f "$BACKUP_FILE" ]; then

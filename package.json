@@ -1,5 +1,5 @@
 {
-  "name": "track_it_back_server",
+  "name": "rhrs_backend",
   "version": "1.0.0",
   "description": "",
   "main": "dist/index.js",
