@@ -13,7 +13,7 @@ export const createUser = async (req: Request, res: Response): Promise<any> => {
     if (error)
       throw new AppError(error.details[0].message, 400);
 
-    const { fullName } = req.body;
+    const { fullName, roleId } = req.body;
     const userExists = await db.user.findUnique({
       where: { fullName },
     });
@@ -28,19 +28,15 @@ export const createUser = async (req: Request, res: Response): Promise<any> => {
       specialChars: false,
     });
 
-    const role = await db.role.findUnique({
-      where: { name: 'User' }
-    })
-
     const savedUser = await db.user.create({
       data: {
         fullName,
         code,
-        roleId: role?.id as string
-      },
+        roleId
+      }
     });
     const { code: _, ...userWithoutcode } = savedUser;
-    return res.status(201).json({ success: true, message: "Account created successfully", user: userWithoutcode });
+    return res.status(201).json({ success: true, message: "Account created successfully", data: userWithoutcode });
   } catch (error: AppError | any) {
     return handleCatchError(error, res);
   }
@@ -72,46 +68,44 @@ export const loginUser = async (req: Request, res: Response): Promise<any> => {
     const token = await generateToken(user.fullName, role?.name as string);
     const { code: _, ...rest } = user
 
-    return res.status(200).json({ rest, token });
+    return res.status(200).json({ success: true, message: 'Login successfully', data: rest, token });
   } catch (error: AppError | any) {
     return handleCatchError(error, res);
   }
 };
 
 
-export const getAllUsers = async (req: Request, res:Response): Promise<any> => {
+export const getAllUsers = async (_req: Request, res: Response): Promise<any> => {
   try {
-    console.log(req.body);
-
     const userRole = await db.role.findUnique({
       where: { name: 'User' }
     })
 
-    if(!userRole)
+    if (!userRole)
       throw new AppError("User role not found", 404)
 
     const users = await db.user.findMany({
       where: { roleId: userRole?.id, status: 'Enabled' }
     })
-    
+
     const usersWithoutCode = users.map((user) => {
       const { code: _, ...rest } = user
       return rest
     })
 
-    return res.status(200).json({ success: true, message: "Users retrieved", users: usersWithoutCode })
+    return res.status(200).json({ success: true, message: "Users retrieved", data: usersWithoutCode })
 
   } catch (error: AppError | any) {
     return handleCatchError(error, res);
   }
 }
 
-export const updateUser = async ( req: Request, res: Response ): Promise<any> => {
+export const updateUser = async (req: Request, res: Response): Promise<any> => {
   try {
     const { error } = validateUpdateDto(req.body)
-    if(error)
+    if (error)
       throw new AppError(error.details[0].message, 400)
-    
+
     const { userId } = req.params
     const { fullName, status } = req.body
 
@@ -124,23 +118,51 @@ export const updateUser = async ( req: Request, res: Response ): Promise<any> =>
     })
 
     const { code: _, ...rest } = updatedUser
-    return res.status(200).json({ success: true, message: "User updated successfully", user: rest })
-    
+    return res.status(200).json({ success: true, message: "User updated successfully", data: rest })
+
   } catch (error: AppError | any) {
     return handleCatchError(error, res)
   }
 }
 
 
-export const getAllUsersAdmin = async (req: Request, res:Response): Promise<any> => {
+export const getAllUsersAdmin = async (_req: Request, res: Response): Promise<any> => {
   try {
-    console.log(req.body);
-
     const users = await db.user.findMany()
 
-    return res.status(200).json({ success: true, message: "Users retrieved", users })
+    return res.status(200).json({ success: true, message: "Users retrieved", data: users })
 
   } catch (error: AppError | any) {
     return handleCatchError(error, res);
+  }
+}
+
+export const getAdminUsers = async (_req: Request, res: Response): Promise<any> => {
+  try {
+    const roles = await db.role.findMany({
+      where: {
+        name: { in: ['Admin', 'SuperAdmin'] },
+      },
+    })
+
+    const roleIds: string[] =  []
+    roles.map((role) => {
+      return roleIds.push(role.id)
+    })
+
+    const users = await db.user.findMany({
+      where: {
+        roleId: { in: roleIds }
+      }
+    })
+
+    const usersWithoutCode = users.map((user)=>{
+      const { code: _, ...rest } = user
+      return rest
+    })
+
+    return res.status(200).json({ success: true, message: 'Users retrieved', data: usersWithoutCode })
+  } catch (error: AppError | any) {
+    return handleCatchError(error, res)
   }
 }
