@@ -26,7 +26,7 @@ export const verifyTokenAndRoles = async (req: Request, res: Response, next: Nex
             },
         });
 
-        const roleNames = roles.map(role => role.name);
+        const roleNames = roles.map((role: { name: any; }) => role.name);
         if (roleNames.length === 0) {
             return res.status(500).json({ authenticated: false, message: 'Roles not properly set in the database' });
         }

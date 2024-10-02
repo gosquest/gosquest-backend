@@ -19,7 +19,7 @@ app.use(express.urlencoded({ extended: true }));
 app.use(morgan('dev'));
 
 // Routers
-app.use("/", router)
+app.use("/api/v1/", router)
 
 app.listen(PORT, () => {
   console.log(`🏃‍♂️ server running on port ${PORT}`)

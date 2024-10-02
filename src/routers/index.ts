@@ -5,9 +5,9 @@ import { ProjectRouter } from "./projects.routes";
 import { RatingRouter } from "./rating.routes";
 
 const router  = Router()
-router.use("/api/v1/users", UserRouter)
-router.use("/api/v1/roles", RoleRouter)
-router.use("/api/v1/projects", ProjectRouter)
-router.use("/api/v1/ratings", RatingRouter)
+router.use("/users", UserRouter)
+router.use("/roles", RoleRouter)
+router.use("/projects", ProjectRouter)
+router.use("/ratings", RatingRouter)
 
 export default router

@@ -88,7 +88,7 @@ export const getAllUsers = async (_req: Request, res: Response): Promise<any> =>
       where: { roleId: userRole?.id, status: 'Enabled' }
     })
 
-    const usersWithoutCode = users.map((user) => {
+    const usersWithoutCode = users.map((user: { [x: string]: any; code: any; }) => {
       const { code: _, ...rest } = user
       return rest
     })
@@ -146,7 +146,7 @@ export const getAdminUsers = async (_req: Request, res: Response): Promise<any> 
     })
 
     const roleIds: string[] =  []
-    roles.map((role) => {
+    roles.map((role: { id: string; }) => {
       return roleIds.push(role.id)
     })
 
@@ -156,7 +156,7 @@ export const getAdminUsers = async (_req: Request, res: Response): Promise<any> 
       }
     })
 
-    const usersWithoutCode = users.map((user)=>{
+    const usersWithoutCode = users.map((user: { [x: string]: any; code: any; })=>{
       const { code: _, ...rest } = user
       return rest
     })
