@@ -4,6 +4,8 @@ import { ValidateSignUpDto, validateLoginDto, validateUpdateDto } from "../utils
 import { generateToken } from "../utils/generate.token";
 import { db } from "../db/prisma";
 import otpGenerator from "otp-generator"
+import { extractPayload } from "../utils/extract.payload";
+import { JwtPayload } from "jsonwebtoken";
 
 // create user
 export const createUser = async (req: Request, res: Response): Promise<any> => {
@@ -166,3 +168,39 @@ export const getAdminUsers = async (_req: Request, res: Response): Promise<any> 
     return handleCatchError(error, res)
   }
 }
+
+
+export const validateToken = async (req: Request, res: Response): Promise<any> => {
+  try {
+       // Get token from Authorization header or cookies
+       const authHeader = req.headers.authorization;
+       const token = authHeader && authHeader.startsWith('Bearer ') ? authHeader.split(' ')[1] : req.cookies.token;
+       
+      if (!token) {
+          return res.status(401).json({ message: "Unauthorized" });
+      }
+
+      const payload = extractPayload(token);
+      if (!payload) {
+          return res.status(401).json({ message: "Unauthorized" });
+      }
+
+      const userPayload = payload as JwtPayload;
+      
+      const user = await db.user.findUnique({
+        where: {fullName: userPayload.fullName}
+      });
+
+      if (!user) {
+          return res.status(404).json({ message: "User not found" });
+      }
+
+      const userRole = await db.role.findUnique({
+        where: { id: user.roleId }
+      });
+
+      return res.status(200).json({ success: true, message: "Token is valid", user, userRole });
+  } catch (error: AppError | any) {
+    return handleCatchError(error, res)
+  }
+};
