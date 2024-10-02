@@ -48,7 +48,7 @@ export const getProjectById = async (req: Request, res: Response): Promise<any> 
 // Get all projects
 export const getAllProjects = async (_req: Request, res: Response): Promise<any> => {
     try {
-        const projects = await db.project.findMany();
+        const projects = await db.project.findMany({});
         return res.status(200).json({ success: true, projects });
     } catch (error: AppError | any) {
         return handleCatchError(error, res);
@@ -122,5 +122,52 @@ export const disableProject = async (req: Request, res: Response): Promise<any> 
         return res.status(200).json({ success: true, message: "Project disabled successfully", disabledProject });
     } catch (error: AppError | any) {
         return handleCatchError(error, res);
+    }
+};
+
+// Get rated projects by user
+export const getRatedByUser = async (req: Request, res: Response): Promise<void> => {
+    try {
+        const { userId } = req.params;
+
+        // Fetch the rated projects for the user
+        const ratedProjects = await db.project.findMany({
+            where: {
+                Rating: {
+                    some: {
+                        userId: userId
+                    }
+                }
+            },
+            include: {
+                Rating: true
+            }
+        });
+
+        res.status(200).json({success: true, message: 'Projects retrieved', data: ratedProjects});
+    } catch (error: any) {
+        handleCatchError(error, res);
+    }
+};
+
+// Get unrated projects for user
+export const getUnratedByUser = async (req: Request, res: Response): Promise<void> => {
+    try {
+        const { userId } = req.params;
+
+        // Fetch the unrated projects for the user
+        const unratedProjects = await db.project.findMany({
+            where: {
+                Rating: {
+                    none: {
+                        userId: userId
+                    }
+                }
+            }
+        });
+
+        res.status(200).json({ success: true, message: 'Projects retrieved', data: unratedProjects });
+    } catch (error: any) {
+        handleCatchError(error, res);
     }
 };

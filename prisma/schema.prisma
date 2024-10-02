@@ -71,7 +71,7 @@ model Rating {
   impact_to_society Int
   performance       Int
   progress          Int
-  feedback          String @db.VarChar(500)
+  feedback          String   @db.VarChar(500)
   createdAt         DateTime @default(now())
   updatedAt         DateTime @updatedAt
 
