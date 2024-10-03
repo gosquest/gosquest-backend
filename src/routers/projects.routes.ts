@@ -4,8 +4,8 @@ import { CheckAuth, CheckAdmin } from "../middlewares";
 
 export const ProjectRouter = Router()
 
-ProjectRouter.post('/create', CheckAdmin, createProject)
-ProjectRouter.get('/all', CheckAuth, getAllProjects)
+ProjectRouter.post('', CheckAdmin, createProject)
+ProjectRouter.get('', CheckAuth, getAllProjects)
 ProjectRouter.get('/:projectId', CheckAuth, getProjectById)
 ProjectRouter.put('/:projectId', CheckAdmin, updateProject)
 ProjectRouter.get('/rated/:userId', CheckAuth, getRatedByUser)
