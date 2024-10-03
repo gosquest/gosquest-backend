@@ -142,8 +142,8 @@ ALTER TABLE public._prisma_migrations OWNER TO peaceishimwem;
 --
 
 COPY public."Project" (id, name, team_leader, description, logo, cover_image, link, status, "createdAt", "updatedAt", fields) FROM stdin;
-f040daea-64f8-4219-9f63-e87665e66c41	Navigo	Ndayambaje Patrick	NaviGo is an innovative AI-driven company dedicated to solving transportation challenges. We specialize in traffic management and efficient transport services, collaborating with industry leaders to enhance mobility. Harnessing AI's power, we're transforming the future of transportation.	https://navigo.rw/images/logoextended.svg	https://s3-alpha-sig.figma.com/img/fdea/72c2/dca7947d016b59ce375ac435d235a1f4?Expires=1728259200&Key-Pair-Id=APKAQ4GOSFWCVNEHN3O4&Signature=SDSpXtWO7psAsH~LupQwxSqgaLbBHCGkXwLvIlR8lVc~bMOWXsiPgi3ARRhN1W-fMBidY8~nqi76alvwG9rrUCF1sCzFvAW-Tys1gr~0yXY7F9-CtStM7y27ijqCKYrrMxHDn4UO-MoWBYiGNjgEmn7tLogEm4p7AottfRP3b7vPOSQ~lN7HQ5Lzsc9s3OJLMXFipEpCxppef9Ox1uSM9v7G2sWSpYlzQ-ZzSOVJs1BFlhG1pavdSw3Agadtzyr4SvUnyUKo43mEMFXeK-RSZtTS~EKJE01mMvhynvBx3~zJWWeGZPavUGWKy-iVMeQpiUGsNiefNP-Dbo6WLFFH9A__	https://navigo.rw	Enabled	2024-09-30 07:43:22.803	2024-10-03 07:15:52.511	{Transportation}
 2f9d9151-6c7c-4aa7-af80-40c67d37c4ea	Agrinexa	Ineza Munyaneza Celia	This project aims to revolutionize agricultural practices in Rwanda by leveraging technology to optimize irrigation and pest control. By integrating advanced sensors, data analytics, and automation, we seek to enhance crop yields, reduce water consumption, and minimize the use of harmful pesticides.	/projects/logo/2metJ3UKPFYRRmhbMlY5fn6cX3P_a3cfa3de35a50f94406108e437485fba.svg	/projects/cover/Diagrams_IDSICOV_3d69d07c0f41241780292ba213b0bc1a.svg	https://agrinexa.com	Enabled	2024-10-03 07:47:02.26	2024-10-03 07:47:02.26	{Agriculture,Tech}
+7d114790-ed02-416a-9aad-e41d6229a0d4	Navigo	Ndayambaje Patrick	NaviGo is an innovative AI-driven company dedicated to solving transportation challenges. We specialize in traffic management and efficient transport services, collaborating with industry leaders to enhance mobility. Harnessing AI's power, we're transforming the future of transportation.	/projects/logo/logoextended_3b10dd06d275aeb3bd71d7c634cf9df6.svg	/projects/cover/cover_image_navigo_59d0e7a23605f6d330b1254947d12b6a.png	https://navigo.rw	Enabled	2024-10-03 07:54:26.185	2024-10-03 07:54:26.185	{Transportation}
 \.
 
 
@@ -152,7 +152,6 @@ f040daea-64f8-4219-9f63-e87665e66c41	Navigo	Ndayambaje Patrick	NaviGo is an inno
 --
 
 COPY public."Rating" (id, "userId", "projectId", relevance, impact_to_society, performance, progress, feedback, "createdAt", "updatedAt") FROM stdin;
-772f7edc-e03f-4607-b428-adbd75e74013	1eeec2f0-5774-49c2-9bf1-068713844d89	f040daea-64f8-4219-9f63-e87665e66c41	10	9	8	9	Your project is very good but it's somehow not user friendly, I mean for users it might be hard to adapt and know how to use it.	2024-09-30 08:23:45.813	2024-09-30 08:23:45.813
 \.
 
 

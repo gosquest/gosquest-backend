@@ -6,7 +6,6 @@ import { db } from "../db/prisma";
 // Create a new project
 export const createProject = async (req: Request, res: Response): Promise<any> => {
     try {
-        console.log(req.body)
         const { error } = validateProjectDto(req.body);
         if (error) throw new AppError(error.details[0].message, 400);
 
