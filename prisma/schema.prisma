@@ -49,7 +49,7 @@ model Role {
 model Project {
   id          String   @id @default(uuid()) @db.Uuid
   name        String   @unique
-  field       String
+  fields       String[]
   team_leader String
   description String
   logo        String

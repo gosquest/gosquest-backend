@@ -147,7 +147,7 @@ export const getAdminUsers = async (_req: Request, res: Response): Promise<any> 
       },
     })
 
-    const roleIds: string[] =  []
+    const roleIds: string[] = []
     roles.map((role: { id: string; }) => {
       return roleIds.push(role.id)
     })
@@ -158,7 +158,7 @@ export const getAdminUsers = async (_req: Request, res: Response): Promise<any> 
       }
     })
 
-    const usersWithoutCode = users.map((user: { [x: string]: any; code: any; })=>{
+    const usersWithoutCode = users.map((user: { [x: string]: any; code: any; }) => {
       const { code: _, ...rest } = user
       return rest
     })
@@ -172,35 +172,38 @@ export const getAdminUsers = async (_req: Request, res: Response): Promise<any> 
 
 export const validateToken = async (req: Request, res: Response): Promise<any> => {
   try {
-       // Get token from Authorization header or cookies
-       const authHeader = req.headers.authorization;
-       const token = authHeader && authHeader.startsWith('Bearer ') ? authHeader.split(' ')[1] : req.cookies.token;
-       
-      if (!token) {
-          return res.status(401).json({ message: "Unauthorized" });
-      }
+    // Get token from Authorization header or cookies
+    const authHeader = req.headers.authorization;
+    const token = authHeader && authHeader.startsWith('Bearer ') ? authHeader.split(' ')[1] : req.cookies.token;
 
-      const payload = extractPayload(token);
-      if (!payload) {
-          return res.status(401).json({ message: "Unauthorized" });
-      }
+    if (!token) {
+      return res.status(401).json({ success: false, message: "Unauthorized" });
+    }
+    const payload = extractPayload(token);
 
-      const userPayload = payload as JwtPayload;
-      
-      const user = await db.user.findUnique({
-        where: {fullName: userPayload.fullName}
-      });
 
-      if (!user) {
-          return res.status(404).json({ message: "User not found" });
-      }
+    if (!payload) {
+      return res.status(401).json({ success: false, message: "Unauthorized" });
+    }    
 
-      const userRole = await db.role.findUnique({
-        where: { id: user.roleId }
-      });
+    const userPayload = payload as JwtPayload;
 
-      return res.status(200).json({ success: true, message: "Token is valid", user, userRole });
+    const user = await db.user.findUnique({
+      where: { fullName: userPayload.fullName }
+    });
+
+    if (!user) {
+      return res.status(404).json({ success: false, message: "User not found" });
+    }
+
+    const userRole = await db.role.findUnique({
+      where: { id: user.roleId }
+    });
+
+    return res.status(200).json({ success: true, message: "Token is valid", user, userRole });
   } catch (error: AppError | any) {
+    console.log(error);
+    
     return handleCatchError(error, res)
   }
 };

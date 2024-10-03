@@ -52,7 +52,6 @@ SET default_table_access_method = heap;
 CREATE TABLE public."Project" (
     id uuid NOT NULL,
     name text NOT NULL,
-    field text NOT NULL,
     team_leader text NOT NULL,
     description text NOT NULL,
     logo text NOT NULL,
@@ -60,7 +59,8 @@ CREATE TABLE public."Project" (
     link text NOT NULL,
     status public."Status" DEFAULT 'Enabled'::public."Status" NOT NULL,
     "createdAt" timestamp(3) without time zone DEFAULT CURRENT_TIMESTAMP NOT NULL,
-    "updatedAt" timestamp(3) without time zone NOT NULL
+    "updatedAt" timestamp(3) without time zone NOT NULL,
+    fields text[]
 );
 
 
@@ -141,8 +141,9 @@ ALTER TABLE public._prisma_migrations OWNER TO peaceishimwem;
 -- Data for Name: Project; Type: TABLE DATA; Schema: public; Owner: peaceishimwem
 --
 
-COPY public."Project" (id, name, field, team_leader, description, logo, cover_image, link, status, "createdAt", "updatedAt") FROM stdin;
-f040daea-64f8-4219-9f63-e87665e66c41	Navigo	Transportation	Ndayambaje Patrick	NaviGo is an innovative AI-driven company dedicated to solving transportation challenges. We specialize in traffic management and efficient transport services, collaborating with industry leaders to enhance mobility. Harnessing AI's power, we're transforming the future of transportation.	https://navigo.rw/images/logoextended.svg	https://s3-alpha-sig.figma.com/img/fdea/72c2/dca7947d016b59ce375ac435d235a1f4?Expires=1728259200&Key-Pair-Id=APKAQ4GOSFWCVNEHN3O4&Signature=SDSpXtWO7psAsH~LupQwxSqgaLbBHCGkXwLvIlR8lVc~bMOWXsiPgi3ARRhN1W-fMBidY8~nqi76alvwG9rrUCF1sCzFvAW-Tys1gr~0yXY7F9-CtStM7y27ijqCKYrrMxHDn4UO-MoWBYiGNjgEmn7tLogEm4p7AottfRP3b7vPOSQ~lN7HQ5Lzsc9s3OJLMXFipEpCxppef9Ox1uSM9v7G2sWSpYlzQ-ZzSOVJs1BFlhG1pavdSw3Agadtzyr4SvUnyUKo43mEMFXeK-RSZtTS~EKJE01mMvhynvBx3~zJWWeGZPavUGWKy-iVMeQpiUGsNiefNP-Dbo6WLFFH9A__	https://navigo.rw	Enabled	2024-09-30 07:43:22.803	2024-09-30 07:50:11.178
+COPY public."Project" (id, name, team_leader, description, logo, cover_image, link, status, "createdAt", "updatedAt", fields) FROM stdin;
+f040daea-64f8-4219-9f63-e87665e66c41	Navigo	Ndayambaje Patrick	NaviGo is an innovative AI-driven company dedicated to solving transportation challenges. We specialize in traffic management and efficient transport services, collaborating with industry leaders to enhance mobility. Harnessing AI's power, we're transforming the future of transportation.	https://navigo.rw/images/logoextended.svg	https://s3-alpha-sig.figma.com/img/fdea/72c2/dca7947d016b59ce375ac435d235a1f4?Expires=1728259200&Key-Pair-Id=APKAQ4GOSFWCVNEHN3O4&Signature=SDSpXtWO7psAsH~LupQwxSqgaLbBHCGkXwLvIlR8lVc~bMOWXsiPgi3ARRhN1W-fMBidY8~nqi76alvwG9rrUCF1sCzFvAW-Tys1gr~0yXY7F9-CtStM7y27ijqCKYrrMxHDn4UO-MoWBYiGNjgEmn7tLogEm4p7AottfRP3b7vPOSQ~lN7HQ5Lzsc9s3OJLMXFipEpCxppef9Ox1uSM9v7G2sWSpYlzQ-ZzSOVJs1BFlhG1pavdSw3Agadtzyr4SvUnyUKo43mEMFXeK-RSZtTS~EKJE01mMvhynvBx3~zJWWeGZPavUGWKy-iVMeQpiUGsNiefNP-Dbo6WLFFH9A__	https://navigo.rw	Enabled	2024-09-30 07:43:22.803	2024-10-03 07:15:52.511	{Transportation}
+2f9d9151-6c7c-4aa7-af80-40c67d37c4ea	Agrinexa	Ineza Munyaneza Celia	This project aims to revolutionize agricultural practices in Rwanda by leveraging technology to optimize irrigation and pest control. By integrating advanced sensors, data analytics, and automation, we seek to enhance crop yields, reduce water consumption, and minimize the use of harmful pesticides.	/projects/logo/2metJ3UKPFYRRmhbMlY5fn6cX3P_a3cfa3de35a50f94406108e437485fba.svg	/projects/cover/Diagrams_IDSICOV_3d69d07c0f41241780292ba213b0bc1a.svg	https://agrinexa.com	Enabled	2024-10-03 07:47:02.26	2024-10-03 07:47:02.26	{Agriculture,Tech}
 \.
 
 
@@ -172,9 +173,9 @@ c4f28d56-a4ba-4220-b7a2-a36cd46bb447	SuperAdmin	System owner	Enabled	2024-09-29 
 
 COPY public."User" (id, "fullName", "roleId", status, "createdAt", "updatedAt", code) FROM stdin;
 1eeec2f0-5774-49c2-9bf1-068713844d89	Ineza Hope	4e2766c5-da37-444e-a94a-92fab739ff53	Enabled	2024-09-29 19:18:43.668	2024-09-29 19:18:43.668	8942
-f84e04ed-7ed9-4ceb-a459-07365d7b6395	Mugisha Darius	c4f28d56-a4ba-4220-b7a2-a36cd46bb447	Enabled	2024-09-29 13:32:38.844	2024-09-30 06:43:13.645	4825
-9a04e720-7b48-4616-bd61-7fd77fc6108d	Yves Maurice	4cdb58d1-5388-4b68-ae30-c6971ec49488	Enabled	2024-09-30 09:18:52.525	2024-09-30 09:18:52.525	9786
 78abd53c-e352-444b-84d2-4dff048ec9a8	Peace Ishimwe	4cdb58d1-5388-4b68-ae30-c6971ec49488	Enabled	2024-09-29 13:03:17.929	2024-09-30 09:50:36.402	1775
+9a04e720-7b48-4616-bd61-7fd77fc6108d	Yves Maurice	4e2766c5-da37-444e-a94a-92fab739ff53	Enabled	2024-09-30 09:18:52.525	2024-10-02 05:29:20.427	9786
+f84e04ed-7ed9-4ceb-a459-07365d7b6395	Mugisha Darius	4e2766c5-da37-444e-a94a-92fab739ff53	Enabled	2024-09-29 13:32:38.844	2024-10-02 05:29:30.436	4825
 \.
 
 
@@ -191,6 +192,8 @@ b142522f-d3ac-4821-8b9d-9d716ae5e4f9	dab704fd39928144a06516852c6804b7c860c9b78f9
 f5efe1dd-9df3-49e8-9c59-23184438e182	66aac3cad010b0ff802454ee6480f84810ca7685af3e100cfda6cbc1c96b83a8	2024-09-30 07:59:28.577385+02	20240930055928_removed_user_admin	\N	\N	2024-09-30 07:59:28.572819+02	1
 17bdc2e9-f207-41c1-bf20-2b39338d4908	f2815c08e1624a254623f1e6ded44baea2e093eeaa63dac03702ab6e9f4731f3	2024-09-30 08:51:47.726515+02	20240930065147_added_status_on_projects	\N	\N	2024-09-30 08:51:47.723053+02	1
 3e16dbbc-a3df-48f2-b105-503a3483ef0e	174d420aa614458abc8c404d41d0e9137c73b1cf3e24d72a4a08492e9eab8621	2024-09-30 09:42:30.061751+02	20240930074230_rating	\N	\N	2024-09-30 09:42:30.050006+02	1
+5f19be8d-7e2e-4119-905f-16a1d701a16a	8b4e55572c055652ddd944c37ca3b26fe1f0460f1b5c412e866e752d6d8a8183	2024-10-03 09:08:20.190881+02	20241003070820_changed_field_to_array	\N	\N	2024-10-03 09:08:20.186909+02	1
+9b45e21e-ba31-41cc-b166-b0f819963b96	fbb3d602ebfcb92f073cfab1eceb1b4afe961d344645f28a69ea7427fce90d78	2024-10-03 09:14:57.293634+02	20241003071457_changed_field_to_fields	\N	\N	2024-10-03 09:14:57.2918+02	1
 \.
 
 

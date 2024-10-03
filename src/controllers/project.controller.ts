@@ -6,21 +6,21 @@ import { db } from "../db/prisma";
 // Create a new project
 export const createProject = async (req: Request, res: Response): Promise<any> => {
     try {
+        console.log(req.body)
         const { error } = validateProjectDto(req.body);
         if (error) throw new AppError(error.details[0].message, 400);
 
-        const { name, field, team_leader, description, logo, cover_image, link, status } = req.body;
+        const { name, fields, team_leader, description, logo, cover_image, link } = req.body;
 
         const savedProject = await db.project.create({
             data: {
                 name,
-                field,
+                fields,
                 team_leader,
                 description,
                 logo,
                 cover_image,
-                link,
-                status
+                link 
             }
         });
         return res.status(201).json({ success: true, message: "Project created successfully", savedProject });
@@ -74,14 +74,14 @@ export const updateProject = async (req: Request, res: Response): Promise<any> =
             throw new AppError('Project not found', 404);
         }
 
-        const { name, field, team_leader, description, logo, cover_image, link, status } = req.body;
+        const { name, fields, team_leader, description, logo, cover_image, link, status } = req.body;
 
         // Update the project in the database
         const updatedProject = await db.project.update({
             where: { id: projectId },
             data: {
                 name,
-                field,
+                fields,
                 team_leader,
                 description,
                 logo,
