@@ -64,7 +64,7 @@ export const validateRatingDto = (data: any) => {
       impact_to_society: Joi.number().integer().min(1).max(10).required(),
       performance: Joi.number().integer().min(1).max(10).required(),
       progress: Joi.number().integer().min(1).max(10).required(),
-      feedback: Joi.string().max(500).required()
+      feedback: Joi.string().max(500).optional()
   });
 
   return schema.validate(data);

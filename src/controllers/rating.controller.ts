@@ -10,11 +10,8 @@ export const createRating = async (req: Request, res: Response): Promise<any> =>
         if(error)
             throw new AppError(error.details[0].message, 400)
 
-        const { userId, projectId, relevance, impact_to_society, performance, progress, feedback } = req.body;
-
-
         const ratingExists = await db.rating.findFirst({
-            where: { userId: userId, projectId: projectId }
+            where: { userId: req.body.userId, projectId: req.body.projectId }
         })
 
         if(ratingExists)
@@ -22,15 +19,7 @@ export const createRating = async (req: Request, res: Response): Promise<any> =>
 
         // Create the rating in the database
         const rating = await db.rating.create({
-            data: {
-                userId,
-                projectId,
-                relevance,
-                impact_to_society,
-                performance,
-                progress,
-                feedback
-            }
+            data: req.body
         });
 
         return res.status(201).json({
