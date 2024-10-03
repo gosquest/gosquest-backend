@@ -78,7 +78,7 @@ CREATE TABLE public."Rating" (
     impact_to_society integer NOT NULL,
     performance integer NOT NULL,
     progress integer NOT NULL,
-    feedback character varying(500) NOT NULL,
+    feedback character varying(500),
     "createdAt" timestamp(3) without time zone DEFAULT CURRENT_TIMESTAMP NOT NULL,
     "updatedAt" timestamp(3) without time zone NOT NULL
 );
@@ -142,7 +142,7 @@ ALTER TABLE public._prisma_migrations OWNER TO peaceishimwem;
 --
 
 COPY public."Project" (id, name, team_leader, description, logo, cover_image, link, status, "createdAt", "updatedAt", fields) FROM stdin;
-2f9d9151-6c7c-4aa7-af80-40c67d37c4ea	Agrinexa	Ineza Munyaneza Celia	This project aims to revolutionize agricultural practices in Rwanda by leveraging technology to optimize irrigation and pest control. By integrating advanced sensors, data analytics, and automation, we seek to enhance crop yields, reduce water consumption, and minimize the use of harmful pesticides.	/projects/logo/2metJ3UKPFYRRmhbMlY5fn6cX3P_a3cfa3de35a50f94406108e437485fba.svg	/projects/cover/Diagrams_IDSICOV_3d69d07c0f41241780292ba213b0bc1a.svg	https://agrinexa.com	Enabled	2024-10-03 07:47:02.26	2024-10-03 07:47:02.26	{Agriculture,Tech}
+2f9d9151-6c7c-4aa7-af80-40c67d37c4ea	Agrinexa	Ineza Munyaneza Celia	This project aims to revolutionize agricultural practices in Rwanda by leveraging technology to optimize irrigation and pest control. By integrating advanced sensors, data analytics, and automation, we seek to enhance crop yields, reduce water consumption, and minimize the use of harmful pesticides.	/projects/logo/2metJ3UKPFYRRmhbMlY5fn6cX3P_a3cfa3de35a50f94406108e437485fba.svg	/projects/cover/Diagrams_IDSICOV_3d69d07c0f41241780292ba213b0bc1a.svg	https://agrinexa.com	Enabled	2024-10-03 07:47:02.26	2024-10-03 11:43:42.831	{Agriculture,Technology}
 7d114790-ed02-416a-9aad-e41d6229a0d4	Navigo	Ndayambaje Patrick	NaviGo is an innovative AI-driven company dedicated to solving transportation challenges. We specialize in traffic management and efficient transport services, collaborating with industry leaders to enhance mobility. Harnessing AI's power, we're transforming the future of transportation.	/projects/logo/logoextended_3b10dd06d275aeb3bd71d7c634cf9df6.svg	/projects/cover/cover_image_navigo_59d0e7a23605f6d330b1254947d12b6a.png	https://navigo.rw	Enabled	2024-10-03 07:54:26.185	2024-10-03 07:54:26.185	{Transportation}
 \.
 
@@ -152,6 +152,8 @@ COPY public."Project" (id, name, team_leader, description, logo, cover_image, li
 --
 
 COPY public."Rating" (id, "userId", "projectId", relevance, impact_to_society, performance, progress, feedback, "createdAt", "updatedAt") FROM stdin;
+b7372ecb-3c66-4cd8-b89c-9545e320835c	78abd53c-e352-444b-84d2-4dff048ec9a8	7d114790-ed02-416a-9aad-e41d6229a0d4	5	5	4	5	\N	2024-10-03 14:33:39.986	2024-10-03 14:33:39.986
+0cb85279-9c49-4f25-8acf-0b9759c13706	78abd53c-e352-444b-84d2-4dff048ec9a8	2f9d9151-6c7c-4aa7-af80-40c67d37c4ea	5	5	4	3	Nice project but you have to move rapidly.	2024-10-03 14:37:14.062	2024-10-03 14:37:14.062
 \.
 
 
@@ -193,6 +195,7 @@ f5efe1dd-9df3-49e8-9c59-23184438e182	66aac3cad010b0ff802454ee6480f84810ca7685af3
 3e16dbbc-a3df-48f2-b105-503a3483ef0e	174d420aa614458abc8c404d41d0e9137c73b1cf3e24d72a4a08492e9eab8621	2024-09-30 09:42:30.061751+02	20240930074230_rating	\N	\N	2024-09-30 09:42:30.050006+02	1
 5f19be8d-7e2e-4119-905f-16a1d701a16a	8b4e55572c055652ddd944c37ca3b26fe1f0460f1b5c412e866e752d6d8a8183	2024-10-03 09:08:20.190881+02	20241003070820_changed_field_to_array	\N	\N	2024-10-03 09:08:20.186909+02	1
 9b45e21e-ba31-41cc-b166-b0f819963b96	fbb3d602ebfcb92f073cfab1eceb1b4afe961d344645f28a69ea7427fce90d78	2024-10-03 09:14:57.293634+02	20241003071457_changed_field_to_fields	\N	\N	2024-10-03 09:14:57.2918+02	1
+7ba37028-4ec1-473d-a8e4-63566c1240e9	617998719d3cadde785d6ac99da9b4292044c147e23b859ff20e1ae4c73d7aa6	2024-10-03 16:19:00.031042+02	20241003141900_feedback_not_required	\N	\N	2024-10-03 16:19:00.028495+02	1
 \.
 
 
