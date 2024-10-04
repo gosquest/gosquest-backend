@@ -54,13 +54,14 @@ export const loginUser = async (req: Request, res: Response): Promise<any> => {
     }
 
     const { fullName, code } = req.body;
+    console.log(req.body)
 
     const user = await db.user.findFirst({
       where: { fullName, code },
     });
 
     if (!user) {
-      throw new AppError("User not found", 404);
+      throw new AppError("Invalid credentials", 400);
     }
 
     const role = await db.role.findUnique({

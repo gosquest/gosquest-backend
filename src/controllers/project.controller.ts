@@ -47,7 +47,11 @@ export const getProjectById = async (req: Request, res: Response): Promise<any> 
 // Get all projects
 export const getAllProjects = async (_req: Request, res: Response): Promise<any> => {
     try {
-        const projects = await db.project.findMany({});
+        const projects = await db.project.findMany({
+            include: {
+                Rating: true
+            }
+        });
         return res.status(200).json({ success: true, projects });
     } catch (error: AppError | any) {
         return handleCatchError(error, res);
