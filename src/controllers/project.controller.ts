@@ -33,7 +33,10 @@ export const getProjectById = async (req: Request, res: Response): Promise<any> 
     try {
         const { projectId } = req.params;
         const project = await db.project.findUnique({
-            where: { id: projectId }
+            where: { id: projectId },
+            include: {
+                Rating: true
+            }
         });
 
         if (!project) throw new AppError("Project not found", 404);
