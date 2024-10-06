@@ -131,7 +131,11 @@ export const updateUser = async (req: Request, res: Response): Promise<any> => {
 
 export const getAllUsersAdmin = async (_req: Request, res: Response): Promise<any> => {
   try {
-    const users = await db.user.findMany()
+    const users = await db.user.findMany({
+      include: {
+        role: true
+      }
+    })
 
     return res.status(200).json({ success: true, message: "Users retrieved", data: users })
 
@@ -185,7 +189,7 @@ export const validateToken = async (req: Request, res: Response): Promise<any> =
 
     if (!payload) {
       return res.status(401).json({ success: false, message: "Unauthorized" });
-    }    
+    }
 
     const userPayload = payload as JwtPayload;
 
@@ -204,7 +208,32 @@ export const validateToken = async (req: Request, res: Response): Promise<any> =
     return res.status(200).json({ success: true, message: "Token is valid", user, userRole });
   } catch (error: AppError | any) {
     console.log(error);
-    
+
     return handleCatchError(error, res)
+  }
+};
+
+// Delete user
+export const deleteUser = async (req: Request, res: Response): Promise<any> => {
+  try {
+    const { userId } = req.params;
+
+    const userExists = await db.user.findUnique({
+      where: { id: userId }
+    });
+
+    if (!userExists)
+      throw new AppError("User not found", 404);
+
+    await db.user.delete({
+      where: { id: userId },
+      include: {
+        Rating: true,
+      }
+    });
+
+    return res.status(200).json({ success: true, message: "User deleted successfully" });
+  } catch (error: AppError | any) {
+    return handleCatchError(error, res);
   }
 };
