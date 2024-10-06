@@ -143,6 +143,7 @@ ALTER TABLE public._prisma_migrations OWNER TO peaceishimwem;
 
 COPY public."Project" (id, name, team_leader, description, logo, cover_image, link, status, "createdAt", "updatedAt", fields) FROM stdin;
 2f9d9151-6c7c-4aa7-af80-40c67d37c4ea	Agrinexa	Ineza Munyaneza Celia	This project aims to revolutionize agricultural practices in Rwanda by leveraging technology to optimize irrigation and pest control. By integrating advanced sensors, data analytics, and automation, we seek to enhance crop yields, reduce water consumption, and minimize the use of harmful pesticides.	/projects/logo/2metJ3UKPFYRRmhbMlY5fn6cX3P_a3cfa3de35a50f94406108e437485fba.svg	/projects/cover/Diagrams_IDSICOV_3d69d07c0f41241780292ba213b0bc1a.svg	https://agrinexa.com	Enabled	2024-10-03 07:47:02.26	2024-10-03 11:43:42.831	{Agriculture,Technology}
+3396e7fd-8976-4a6a-b786-fe64d315fe81	Binexopay	Rukundo Prince	Lorem ipsum	/projects/logo/WhatsAppImage2024-10-03at9.46.10PM_3f4da23a8c6d602a6dd1039ce067952b.jpeg	/projects/cover/WhatsAppImage2024-10-03at9.47.23PM_eaf4fd07d2d9ad4b2d29b6415913d6f5.jpeg	https://binexopay.com	Enabled	2024-10-03 20:08:36.389	2024-10-03 20:08:36.389	{Finance}
 7d114790-ed02-416a-9aad-e41d6229a0d4	Navigo	Ndayambaje Patrick	NaviGo is an innovative AI-driven company dedicated to solving transportation challenges. We specialize in traffic management and efficient transport services, collaborating with industry leaders to enhance mobility. Harnessing AI's power, we're transforming the future of transportation.	/projects/logo/logoextended_3b10dd06d275aeb3bd71d7c634cf9df6.svg	/projects/cover/cover_image_navigo_59d0e7a23605f6d330b1254947d12b6a.png	https://navigo.rw	Enabled	2024-10-03 07:54:26.185	2024-10-03 07:54:26.185	{Transportation}
 \.
 
@@ -154,6 +155,8 @@ COPY public."Project" (id, name, team_leader, description, logo, cover_image, li
 COPY public."Rating" (id, "userId", "projectId", relevance, impact_to_society, performance, progress, feedback, "createdAt", "updatedAt") FROM stdin;
 b7372ecb-3c66-4cd8-b89c-9545e320835c	78abd53c-e352-444b-84d2-4dff048ec9a8	7d114790-ed02-416a-9aad-e41d6229a0d4	5	5	4	5	\N	2024-10-03 14:33:39.986	2024-10-03 14:33:39.986
 0cb85279-9c49-4f25-8acf-0b9759c13706	78abd53c-e352-444b-84d2-4dff048ec9a8	2f9d9151-6c7c-4aa7-af80-40c67d37c4ea	5	5	4	3	Nice project but you have to move rapidly.	2024-10-03 14:37:14.062	2024-10-03 14:37:14.062
+b098cca9-c8ab-4720-9782-e2aaf586d00d	9a04e720-7b48-4616-bd61-7fd77fc6108d	2f9d9151-6c7c-4aa7-af80-40c67d37c4ea	5	4	5	4	Nice	2024-10-03 19:08:41.409	2024-10-03 19:08:41.409
+cf09cd7b-6a27-4bea-8655-442107772ccd	78abd53c-e352-444b-84d2-4dff048ec9a8	3396e7fd-8976-4a6a-b786-fe64d315fe81	3	5	3	4	asdkfjha;ksdf;hkajdf	2024-10-03 20:10:42.717	2024-10-03 20:10:42.717
 \.
 
 
@@ -177,6 +180,7 @@ COPY public."User" (id, "fullName", "roleId", status, "createdAt", "updatedAt", 
 78abd53c-e352-444b-84d2-4dff048ec9a8	Peace Ishimwe	4cdb58d1-5388-4b68-ae30-c6971ec49488	Enabled	2024-09-29 13:03:17.929	2024-09-30 09:50:36.402	1775
 9a04e720-7b48-4616-bd61-7fd77fc6108d	Yves Maurice	4e2766c5-da37-444e-a94a-92fab739ff53	Enabled	2024-09-30 09:18:52.525	2024-10-02 05:29:20.427	9786
 f84e04ed-7ed9-4ceb-a459-07365d7b6395	Mugisha Darius	4e2766c5-da37-444e-a94a-92fab739ff53	Enabled	2024-09-29 13:32:38.844	2024-10-02 05:29:30.436	4825
+855de5f4-8d20-41ce-9309-1f4b9fcf4f2a	Kamana Claude	4e2766c5-da37-444e-a94a-92fab739ff53	Enabled	2024-10-06 20:47:52.697	2024-10-06 20:49:04.779	8258
 \.
 
 
