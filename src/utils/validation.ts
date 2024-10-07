@@ -47,7 +47,7 @@ export const validateProjectDto = (ProjectDto: any) => {
     name: Joi.string().min(3).max(100).required(),
     fields: Joi.array().min(1).max(100).required(),
     team_leader: Joi.string().required(),
-    description: Joi.string().min(10).max(500).required(),
+    description: Joi.string().min(10).max(1000).required(),
     logo: Joi.string().required(),
     cover_image: Joi.string().required(),
     link: Joi.string().required()
