@@ -5,6 +5,7 @@ import { ProjectRouter } from "./projects.routes";
 import { RatingRouter } from "./rating.routes";
 
 const router  = Router()
+
 router.use("/users", UserRouter)
 router.use("/roles", RoleRouter)
 router.use("/projects", ProjectRouter)
