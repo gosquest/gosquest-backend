@@ -1,76 +1,78 @@
 import { Request, Response } from 'express';
 import { db } from '../db/prisma';
 import { AppError, handleCatchError } from '../middlewares';
-import { validateRatingDto } from '../utils';
 
-export const createRating = async (req: Request, res: Response): Promise<any> => {
+export const createLikeDislike = async (req: Request, res: Response): Promise<any> => {
     try {
+        const { userId, websiteId, like } = req.body;
 
-        const { error } = validateRatingDto(req.body)
-        if(error)
-            throw new AppError(error.details[0].message, 400)
+        if (typeof like !== 'boolean') {
+            throw new AppError('The like field must be a boolean (true or false)', 400);
+        }
 
-        const ratingExists = await db.rating.findFirst({
-            where: { userId: req.body.userId, projectId: req.body.projectId }
-        })
+        // Check if the user has already liked or disliked the website
+        const existingLikeDislike = await db.likeDislike.findFirst({
+            where: { userId, websiteId }
+        });
 
-        if(ratingExists)
-            throw new AppError("Can't rate same project twice", 401)
+        if (existingLikeDislike) {
+            throw new AppError("You've already liked or disliked this website", 401);
+        }
 
-        // Create the rating in the database
-        const rating = await db.rating.create({
+        // Create the like or dislike in the database
+        const newLikeDislike = await db.likeDislike.create({
             data: req.body
         });
 
         return res.status(201).json({
             success: true,
-            message: 'Rating created successfully',
-            data: rating
+            message: 'Like/Dislike action recorded successfully',
+            data: newLikeDislike
         });
     } catch (error: AppError | any) {
         return handleCatchError(error, res);
     }
 };
 
-export const getAllRatings = async (_req: Request, res: Response): Promise<any> => {
+export const getAllLikeDislikes = async (_req: Request, res: Response): Promise<any> => {
     try {
-        // Fetch all ratings from the database
-        const ratings = await db.rating.findMany({
+        // Fetch all like/dislike actions from the database
+        const likeDislikes = await db.likeDislike.findMany({
             include: {
                 user: true,
-                project: true
+                website: true
             }
         });
 
         return res.status(200).json({
             success: true,
-            data: ratings
+            data: likeDislikes
         });
     } catch (error: AppError | any) {
         return handleCatchError(error, res);
     }
 };
 
-export const getRatingById = async (req: Request, res: Response): Promise<any> => {
+export const getLikeDislikeById = async (req: Request, res: Response): Promise<any> => {
     try {
-        const { ratingId } = req.params;
+        const { id } = req.params;
 
-        // Fetch rating by ID from the database
-        const rating = await db.rating.findUnique({
-            where: { id: ratingId },
+        // Fetch like/dislike action by ID from the database
+        const likeDislike = await db.likeDislike.findUnique({
+            where: { id },
             include: {
                 user: true, 
-                project: true
+                website: true
             }
         });
 
-        if (!rating) {
-            throw new AppError('Rating not found', 404);
+        if (!likeDislike) {
+            throw new AppError('Like/Dislike action not found', 404);
         }
 
         return res.status(200).json({
             success: true,
-            rating
+            data: likeDislike
         });
     } catch (error: AppError | any) {
         return handleCatchError(error, res);

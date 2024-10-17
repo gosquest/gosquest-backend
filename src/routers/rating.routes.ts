@@ -1,9 +1,15 @@
 import { Router } from "express";
-import { createRating, getAllRatings, getRatingById } from "../controllers/rating.controller";
-import { CheckAdmin, CheckAuth } from "../middlewares";
+import { CheckAuth, CheckAdmin } from "../middlewares";
+import {
+   createLikeDislike,
+   getAllLikeDislikes,
+   getLikeDislikeById,
+} from "../controllers/rating.controller";
 
-export const RatingRouter = Router()
+export const LikeDislikeRouter = Router();
 
-RatingRouter.post('', CheckAuth, createRating)
-RatingRouter.get('', CheckAdmin, getAllRatings)
-RatingRouter.get('/:ratingId', CheckAdmin, getRatingById)
+LikeDislikeRouter.post("", CheckAuth, createLikeDislike);
+
+LikeDislikeRouter.get("", CheckAdmin, getAllLikeDislikes);
+
+LikeDislikeRouter.get("/:id", CheckAdmin, getLikeDislikeById);

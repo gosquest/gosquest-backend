@@ -9,3 +9,12 @@ export const hashPassword = async (password: string): Promise<string> => {
     throw new Error('Password hashing failed');
   }
 };
+
+export const verifyPassword = async (password: string, hashedPassword: string): Promise<boolean> => {
+  try {
+    const isMatch = await bcryptjs.compare(password, hashedPassword);
+    return isMatch;
+  } catch (error) {
+    throw new Error('Password verification failed');
+  }
+};

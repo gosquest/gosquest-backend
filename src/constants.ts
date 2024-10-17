@@ -6,7 +6,6 @@ export const usernameRegex = /^[a-z\d](?:[a-z\d]|-(?=[a-z\d])){0,38}$/;
 export enum RoleNameEnum {
     User,
     Admin,
-    SuperAdmin
 }
 
 export enum StatusEnum {
