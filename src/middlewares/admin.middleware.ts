@@ -6,5 +6,5 @@ import { CheckAuth } from "./auth.middleware";
  * Middleware to check if the user is Admin or SuperAdmin.
  */
 export const CheckAdmin = (req: Request, res: Response, next: NextFunction) => {
-    CheckAuth(req, res, next, ['Admin']);
+    CheckAuth(req, res, next, ['ADMIN']);
 };

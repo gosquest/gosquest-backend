@@ -37,10 +37,16 @@ export const createUser = async (req: Request, res: Response): Promise<any> => {
       });
 
       const { password: _, ...userWithoutPassword } = savedUser;
+
+      const token = await generateToken(
+         savedUser.fullName,
+         savedUser.id as string
+      );
       return res.status(201).json({
          success: true,
          message: "Account created successfully",
          data: userWithoutPassword,
+         token,
       });
    } catch (error: AppError | any) {
       return handleCatchError(error, res);
@@ -112,7 +118,7 @@ export const updateUser = async (req: Request, res: Response): Promise<any> => {
       const { userId } = req.params;
       const { fullName, email, password } = req.body;
 
-      let updateData: any = { fullName, email,password};
+      let updateData: any = { fullName, email, password };
 
       if (password) {
          updateData.password = await hashPassword(password);

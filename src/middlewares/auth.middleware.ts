@@ -18,7 +18,8 @@ export const CheckAuth = async (req: Request, _res: Response, next: NextFunction
     }
 
     try {
-        const decoded: any = jwt.verify(token, process.env.JWT_SECRET as string);
+        const decoded: any = jwt.verify(token, process.env.JWT_SECRET_KEY as string);
+        
         
         const user = await db.user.findUnique({
             where: { id: decoded.id },
@@ -28,14 +29,15 @@ export const CheckAuth = async (req: Request, _res: Response, next: NextFunction
             return next(new AppError("User not found", 404));
         }
 
-        // Check user role if allowedRoles is provided
+
         if (allowedRoles && !allowedRoles.includes(user.role)) {
             return next(new AppError("Forbidden: insufficient permissions", 403));
         }
 
-        req.user = user; // Attach user object to request
+        req.user = user; 
         next();
     } catch (error: any) {
+        console.error('JWT Verification Error:', error);
         return next(new AppError("Invalid or expired token", 401));
     }
 };
