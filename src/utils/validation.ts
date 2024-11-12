@@ -52,8 +52,6 @@ export const validateWebsiteDto = (websiteDto: any) => {
       name: Joi.string().min(3).max(100).required(),
       url: Joi.string().uri().required(),
       description: Joi.string().min(5).max(1000).required(),
-      logo:Joi.string().min(5).max(1000).required(),
-      cover_image:Joi.string().min(5).max(1000).required()
    });
 
    return websiteSchema.validate(websiteDto, { abortEarly: false });

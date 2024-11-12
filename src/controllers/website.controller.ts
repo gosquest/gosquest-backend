@@ -12,15 +12,13 @@ export const createWebsite = async (
       const { error } = validateWebsiteDto(req.body);
       if (error) throw new AppError(error.details[0].message, 400);
 
-      const { name, url, description, logo, cover_image } = req.body;
+      const { name, url, description } = req.body;
 
       const savedWebsite = await db.website.create({
          data: {
             name,
             url,
-            description,
-            logo,
-            cover_image,
+            description
          },
       });
       return res
@@ -97,7 +95,7 @@ export const updateWebsite = async (
          throw new AppError("Website not found", 404);
       }
 
-      const { name, url, description, logo, cover_image } = req.body;
+      const { name, url, description } = req.body;
 
       // Update the website in the database
       const updatedWebsite = await db.website.update({
@@ -106,8 +104,6 @@ export const updateWebsite = async (
             name,
             url,
             description,
-            logo,
-            cover_image,
          },
       });
 
